@@ -57,5 +57,5 @@ Panel roles (`arena-runners`, `arena-cross-judge-pool`, `architect-runners`, `in
 
 ## Todo and questions
 
-- `todo_write({ todos: [{ content, status }] })` replaces the whole list. Status is `pending`, `in_progress`, or `completed`. No `id`, `merge`, or `cancelled`.
+- If `todo_write` is available, `todo_write({ todos: [{ content, status }] })` replaces the whole list. Status is `pending`, `in_progress`, or `completed`. No `id`, `merge`, or `cancelled`. If it is absent, keep and update the same checklist in your replies; do not call an unavailable tool or install a todo plugin.
 - Product or preference questions: `ask_user_question`. Not Cursor `AskQuestion`.

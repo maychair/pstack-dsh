@@ -21,6 +21,28 @@ describe('upstream 0.15 DSH skill availability', () => {
     }
   })
 
+  it('exposes internal workflow dependencies while preserving explicit user entry points', async () => {
+    const provider = createSkillProvider(root)
+    const listed = await provider.list()
+    const internal = [
+      'architect', 'arena', 'figure-it-out', 'interrogate',
+      'no-comments', 'show-me-your-work', 'swarm', 'technical-writing',
+    ]
+    const userOnly = [
+      'automate-me', 'blast-radius', 'bro', 'create-verification-skill',
+      'maintain-verification-skill', 'poteto-mode', 'recall', 'reflect', 'tdd', 'teach',
+    ]
+    assert.deepEqual(listed.filter(skill => !skill.invocation.modelInvocable).map(skill => skill.name).sort(), userOnly)
+    for (const name of [...internal, ...userOnly]) {
+      const expected = { modelInvocable: internal.includes(name), userInvocable: true }
+      assert.deepEqual(listed.find(skill => skill.name === name)?.invocation, expected, name)
+      const loaded = await provider.get({ name })
+      assert.deepEqual(loaded?.invocation, expected, name)
+      assert.equal(loaded?.provider, 'pstack-dsh', name)
+      assert.ok(loaded?.content.trim(), name)
+    }
+  })
+
   it('keeps all principle and common workflow skills available to the model', async () => {
     const provider = createSkillProvider(root)
     const names = (await readdir(root)).filter(name => name.startsWith('principle-'))
