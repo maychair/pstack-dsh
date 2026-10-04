@@ -1,14 +1,4 @@
-import { existsSync } from 'node:fs'
-import { resolve } from 'node:path'
-import { pathToFileURL } from 'node:url'
 import { defineConfig } from 'tsdown'
-
-const root = process.env.DSHX_HARNESS?.trim()
-if (!root) throw new Error('Set DSHX_HARNESS to the checkout used for this build.')
-const adapter = resolve(root, 'tools/dshx/src/client-build.js')
-if (!existsSync(adapter)) throw new Error(`dshx client build adapter not found: ${adapter}`)
-const { externalClientBundle } = await import(pathToFileURL(adapter).href)
-const [, client] = externalClientBundle('pstack-dsh', ['src/index.ts'], { clientEntry: 'src/client/index.tsx' })
 
 export default defineConfig([
   {
@@ -23,5 +13,18 @@ export default defineConfig([
       neverBundle: [/^@deepseek-ai\//],
     },
   },
-  client,
+  {
+    entry: { client: 'src/client/index.tsx' },
+    platform: 'browser',
+    target: 'es2022',
+    format: 'cjs',
+    tsconfig: 'tsconfig.client.json',
+    outExtensions: () => ({ js: '.cjs' }),
+    dts: false,
+    outDir: 'lib',
+    clean: false,
+    deps: {
+      neverBundle: [/^@deepseek-ai\//, /^react(?:\/|$)/],
+    },
+  },
 ])
