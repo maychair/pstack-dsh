@@ -1,5 +1,11 @@
 # official pstack 的 DeepSeek Harness 移植
 
+## 本地维护分支 / Local maintenance branch
+
+此分支由 [maychair/pstack-dsh](https://github.com/maychair/pstack-dsh) 维护，基于上游 `v0.2.3`。在 `local/dsh-workflow` 分支修改、测试和构建，再让 DSH 加载本地路径；不要用下面的上游安装命令覆盖本地来源。完整步骤见[本地开发](docs/local-development.md)。原 MIT 许可和版权声明保留。
+
+This branch maintains local workflow fixes on upstream `v0.2.3`. Build and load the local checkout instead of reinstalling the upstream package. See [Local development](docs/local-development.md). The upstream installation instructions below remain for reference.
+
 ## 安装 / Install
 
 ### 官方 DeepSeek Harness 桌面 App（推荐） / Desktop app (recommended)
@@ -80,6 +86,10 @@ Two steps.
 角色模型列表会随 DSH 的登录、退出登录和模型目录变更通知更新，也可点击「刷新模型列表」。刷新只更新候选项，不覆盖尚未保存的角色和 effort；当前选择若失去登录会标为「暂不可用」。新加入 dsh-oauth-login 的 `pi-*` 路由以及 dsh-antigravity-oauth 的 `agy-*` 路由只要已登录且已注册，就会自动纳入，无需在 pstack 里再维护一份提供商名单。
 
 Model choices follow DSH login/logout and catalog notifications. **Refresh models** also updates the choices without replacing unsaved role/effort edits. A selected route that becomes unavailable stays visibly marked. Newly registered, signed-in `pi-*` and `agy-*` routes are discovered without a second provider allowlist.
+
+在 DSH 输入框发送 `/poteto-mode` 加任务，或从 `/` 菜单选择它。这个入口保持 user-only，模型不能调用它。工作流内部调用的 architect、arena、swarm、interrogate、figure-it-out、no-comments、show-me-your-work、technical-writing 支持模型调用；`/tdd` 等显式用户技能保留原有边界。
+
+In DSH, send `/poteto-mode` with the task, or select it from the `/` menu. The entry point stays user-only. Its eight internal workflow skills listed above are model-invocable; explicit user skills such as `/tdd` retain their invocation boundary.
 
 第一次用可以看 [pstack 指南](./docs/guide/README.md)。
 
